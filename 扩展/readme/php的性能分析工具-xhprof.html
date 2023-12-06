@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<!-- saved from url=(0033)https://www.css3er.com/p/232.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+
+    
+    <meta name="baidu-site-verification" content="us4ndaq6C9">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="profile" href="http://gmpg.org/xfn/11">
+    <link rel="icon" href="https://www.css3er.com/static/index/images/favicon.ico" mce_href="https://www.css3er.com" type="image/x-icon">
+    <title>php的性能分析工具：xhprof -
+        小周博客,小周个人博客,程序猿小王子,技术博客,个人博客模板,php博客系统,设计模式,wzyl - 黑夜遮不住光亮</title>
+    <meta name="keywords" content="小周博客,小周个人博客,程序猿小王子,个人博客,技术博客,博客模板,php博客,thinkphp,laravel,php程序员,Linux,javascript,wzyl_php ">
+    <meta name="description" content="借助xhprof工具来分析我们的php代码的性能">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/index/js/html5shiv.min.js"></script>
+    <script src="/static/index/js/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" id="pure-highlightjs-style-group-css" href="./php的性能分析工具-xhprof_files/bootstrap.css" type="text/css" media="all">
+    <link rel="stylesheet" id="default-css" href="./php的性能分析工具-xhprof_files/style.css" type="text/css" media="all">
+    <script src="./php的性能分析工具-xhprof_files/push.js.下载"></script><script src="./php的性能分析工具-xhprof_files/hm.js.下载"></script><script type="text/javascript" src="./php的性能分析工具-xhprof_files/jquery-2.1.1.js.下载"></script>
+    <script src="./php的性能分析工具-xhprof_files/blog.js.下载"></script>
+
+    <!-- baidu traffic statistics -->
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?3570dcf5a96bedfc985c27551cf5589e";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+<link rel="stylesheet" href="./php的性能分析工具-xhprof_files/layer.css" id="layuicss-layer"><style>@-webkit-keyframes jBox-animation-pulseOpen-open {0% {-webkit-transform:scale(1);}50% {-webkit-transform:scale(1.1);}100% {-webkit-transform:scale(1);}}.jBox-animation-pulseOpen-open {-webkit-animation-duration: 350ms;-webkit-animation-name: jBox-animation-pulseOpen-open;}@-webkit-keyframes jBox-animation-zoomOutClose-close {0% {-webkit-transform:scale(1);}100% {-webkit-transform:scale(1.1);}}.jBox-animation-zoomOutClose-close {-webkit-animation-duration: 180ms;-webkit-animation-name: jBox-animation-zoomOutClose-close;}</style><style>@-webkit-keyframes jBox-animation-zoomOutOpen-open {0% {-webkit-transform:scale(1.1);}100% {-webkit-transform:scale(1);}}.jBox-animation-zoomOutOpen-open {-webkit-animation-duration: 180ms;-webkit-animation-name: jBox-animation-zoomOutOpen-open;}@-webkit-keyframes jBox-animation-zoomOutClose-close {0% {-webkit-transform:scale(1);}100% {-webkit-transform:scale(1.1);}}.jBox-animation-zoomOutClose-close {-webkit-animation-duration: 180ms;-webkit-animation-name: jBox-animation-zoomOutClose-close;}</style></head>
+<body class="home blog">
+
+<!-- Fixed navbar -->
+<div class="navfilter"></div>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#b-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://www.css3er.com/"><img src="./php的性能分析工具-xhprof_files/logo.png" alt="小周博客"></a></div>
+
+        <!--菜单开始-->
+        <div class="collapse navbar-collapse" id="b-navbar-collapse">
+            <ul id="menu-bulletin%e8%8f%9c%e5%8d%95" class="nav navbar-nav">
+                <li id="menu-item-332" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-332">
+                    <a title="首页" href="https://www.css3er.com/"><i class="fa fa-home red"></i> 首页</a>
+                </li>
+
+                
+                <!--一级菜单-->
+                
+                <!--二级菜单-->
+
+                <li id="menu-item-331" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-331 dropdown">
+                    <a title="软件开发" href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"><i class="fa fa-code navy"></i> 软件开发 <span class="caret"></span></a>
+                    <ul role="menu" class=" dropdown-menu">
+
+                                                <li id="menu-item-236" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-236">
+                            <a title="php" href="https://www.css3er.com/cate/7.html" target="_blank">php</a>
+                        </li>
+                                                <li id="menu-item-236" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-236">
+                            <a title="mysql" href="https://www.css3er.com/cate/6.html" target="_blank">mysql</a>
+                        </li>
+                                                <li id="menu-item-236" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-236">
+                            <a title="Linux" href="https://www.css3er.com/cate/74.html" target="_blank">Linux</a>
+                        </li>
+                                                <li id="menu-item-236" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-236">
+                            <a title="web" href="https://www.css3er.com/cate/3.html" target="_blank">web</a>
+                        </li>
+                                                <li id="menu-item-236" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-236">
+                            <a title="Go（Golang）" href="https://www.css3er.com/cate/102.html" target="_blank">Go（Golang）</a>
+                        </li>
+                                                <li id="menu-item-236" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-236">
+                            <a title="python" href="https://www.css3er.com/cate/95.html" target="_blank">python</a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                                
+                <!--一级菜单-->
+                
+                <li id="menu-item-309" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-309">
+                    <a title="生活随笔" href="https://www.css3er.com/cate/87.html" target="_blank"><i class="fa fa-apple"></i> 生活随笔</a>
+                </li>
+                                
+                <!--一级菜单-->
+                
+                <li id="menu-item-309" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-309">
+                    <a title="其它" href="https://www.css3er.com/cate/97.html" target="_blank"><i class="fa fa-paper-plane yellow"></i> 其它</a>
+                </li>
+                                
+                <!--一级菜单-->
+                
+                <li id="menu-item-309" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-309">
+                    <a title="职场那些事儿" href="https://www.css3er.com/cate/104.html" target="_blank"><i class="fa fa-commentsfa fa-comments-o"></i> 职场那些事儿</a>
+                </li>
+                                
+                <li id="menu-item-309" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-309">
+                    <a title="邻居" href="https://www.css3er.com/friend.html" target="_blank"><i class="fa fa-globe blue"></i> 邻居</a>
+                </li>
+                <!-- <li id="menu-item-309" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-309">
+                   <a title="留言板" href="message.html"><i class="fa fa-commenting purple"></i> 留言板</a>
+                 </li>-->
+            </ul>
+
+            <ul id="" class="nav navbar-nav" style="float: right;">
+
+                                    <li id="menu-item-332">
+                        <a title="登录" href="https://www.css3er.com/login"><i class="fa fa-login red"></i> 登录
+                        </a>
+                    </li>
+                    <li id="menu-item-332">
+                        <a title="注册" href="https://www.css3er.com/register"><i class="fa fa-login red"></i> 注册
+                        </a>
+                    </li>
+                
+            </ul>
+
+        </div>
+        <!--菜单结束-->
+
+    </div>
+</nav>
+<div class="banner">
+    <form class="search-form center" action="https://www.css3er.com/p/232.html" onsubmit="return false;">
+        <div class="form-group">
+            <input type="text" name="s" value="" id="search_id" class="form-control" placeholder="关键字...">
+            <button type="button" onclick="search_blog();" class="btn btn-default"><i class="fa fa-search navy"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!--gg manual ad start-->
+<!--<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3256817091633845"
+        crossorigin="anonymous"></script>-->
+
+<!-- gg recommend ad one -->
+<!--<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3256817091633845"
+     data-ad-slot="8063522387"
+     data-ad-format="auto"
+     data-full-width-responsive="true">
+</ins>
+
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>-->
+<!--gg manual ad end-->
+
+
+
+
+<!--引入Ueditor的代码高亮相关文件及调用代码高亮方法-->
+
+<!--ueditor js css file-->
+<script src="./php的性能分析工具-xhprof_files/shCore.js.下载" type="text/javascript"></script>
+<link href="./php的性能分析工具-xhprof_files/shCoreDefault.css" type="text/css" rel="stylesheet">
+
+<script>SyntaxHighlighter.all() //ueditor富文本编辑器执行代码高亮</script>
+
+
+
+
+<style>
+	td{
+		border:1px solid #ddd;
+	}
+
+	/*
+	 *  css3 每隔一行 设置背景颜色
+	 */
+	tbody tr:nth-child(2n) {
+		background-color: #edf5fa;
+	}
+
+	/*
+	 *  鼠标移动到当前行 设置相关样式
+	 */
+	tbody tr:hover {
+		background-color: antiquewhite;
+		font-size: 16px;
+	}
+
+</style>
+
+<div class="container content">
+	<div class="row">
+		<div class="col-md-9">
+			<!-- Blog-Box -->
+			<section class="article">
+
+				<!--- Article-Head -->
+				<div class="article-head">
+					<h1 class="article-title text-center">php的性能分析工具：xhprof</h1>
+					<div class="article-info">
+						<span class="article-author navy">小周</span>
+						<span class="article-info">分类：<a href="https://www.css3er.com/cate/7.html" title="php" target="_blank">php</a></span>
+						<span class="article-time">发布时间：2019-11-10 16:27</span>
+						<span class="article-time">更新时间：2022-04-12 12:58</span>
+						<span class="article-view pull-right">阅读:
+							<span class="article-count red">3380</span>
+						</span>
+						<span class="article-view pull-right">评论:
+							<span class="article-count">
+								<a href="javascript:void(0);">0</a>
+							</span>
+						</span>
+					</div>
+				</div>
+				<!--- //Article-Head -->
+
+				<!--- Article-content -->
+				<div class="article-content">
+					<p>本篇博文所使用的环境如下：</p><p>PHP版本：php7.2</p><p>操作系统环境：CentOS Linux release 7.7.1908 (Core)</p><h2>前言概述</h2><p>你和别人同时写出了一个导出用户的功能，你的导出一次用了20分钟，而别人的导出用户功能只用了1分钟，那么这里就很明显的区分出来了你们代码的效率。代码的优劣是问题的根源。如果你想找出是什么原因导致代码执行这么慢，那么你就要学会怎么分析代码性能，找到代码瓶颈。<br></p><p><br></p><p>我们除了可以使用xdebug分析php的性能之外，还可以使用xhprof进行分析php的代码性能。</p><h2>xhprof工具的简介</h2><p>xhprof是由facebook开源出来的一个php轻量级的性能分析工具，跟xdebug类似，但性能开销更低，还可以用在生产环境中，也可以由程序开关来控制是否进行profile。但是官方因为长时间不更新，针对php7已无法正常安装使用。</p><p><br></p><p>对于还在使用php5的童鞋，可以到php官方进行下载安装：</p><p><a href="https://pecl.php.net/package/xhprof" target="_blank" title="https://pecl.php.net/package/xhprof">https://pecl.php.net/package/xhprof</a><br></p><p><br></p><p>php7系列的xhprof扩展可以在以下地址进行下载安装：&nbsp;</p><p><a href="https://github.com/longxinH/xhprof" target="_blank" title="https://github.com/longxinH/xhprof">https://github.com/longxinH/xhprof</a>&nbsp; // xhprof的开源地址（这是第三方的一个库，并不是xhprof官方的。xhprof官方暂不支持php7系列）</p><p><span style="white-space: normal;">xhprof</span>版本下载地址：<a href="https://github.com/longxinH/xhprof/releases" target="_blank" title="https://github.com/longxinH/xhprof/releases">https://github.com/longxinH/xhprof/releases</a></p><h2 style="white-space: normal;">xhprof安装</h2><table border="0" cellpadding="0" cellspacing="0" class="syntaxhighlighter  bash"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="bash spaces">&nbsp;</code><code class="bash plain">wget&nbsp;https:</code><code class="bash plain">//github</code><code class="bash plain">.com</code><code class="bash plain">/longxinH/xhprof/archive/v2</code><code class="bash plain">.1.0.</code><code class="bash functions">tar</code><code class="bash plain">.gz</code></div><div class="line number2 index1 alt1"><code class="bash spaces">&nbsp;</code>&nbsp;</div><div class="line number3 index2 alt2"><code class="bash spaces">&nbsp;</code><code class="bash functions">tar</code>&nbsp;<code class="bash plain">-zxvf&nbsp;v2.1.0.</code><code class="bash functions">tar</code><code class="bash plain">.gz</code></div><div class="line number4 index3 alt1"><code class="bash spaces">&nbsp;</code>&nbsp;</div><div class="line number5 index4 alt2"><code class="bash spaces">&nbsp;</code><code class="bash functions">cd</code>&nbsp;<code class="bash plain">xhprof-2.1.0/</code></div><div class="line number6 index5 alt1"><code class="bash spaces">&nbsp;</code>&nbsp;</div><div class="line number7 index6 alt2"><code class="bash spaces">&nbsp;</code><code class="bash functions">cd</code>&nbsp;<code class="bash plain">extension/</code></div><div class="line number8 index7 alt1"><code class="bash spaces">&nbsp;</code><code class="bash plain">phpize</code></div><div class="line number9 index8 alt2"><code class="bash spaces">&nbsp;</code>&nbsp;</div><div class="line number10 index9 alt1"><code class="bash spaces">&nbsp;</code><code class="bash plain">.</code><code class="bash plain">/configure</code>&nbsp;<code class="bash plain">--with-php-config=</code><code class="bash plain">/usr/bin/php-config</code>&nbsp;<code class="bash comments">#这里的php-config路径换成你自己的</code></div><div class="line number11 index10 alt2"><code class="bash spaces">&nbsp;</code>&nbsp;</div><div class="line number12 index11 alt1"><code class="bash spaces">&nbsp;</code><code class="bash functions">make</code>&nbsp;<code class="bash plain">&amp;&amp;&nbsp;</code><code class="bash functions">make</code>&nbsp;<code class="bash functions">install</code></div><div class="line number13 index12 alt2"><code class="bash spaces">&nbsp;</code>&nbsp;</div><div class="line number14 index13 alt1"><code class="bash spaces">&nbsp;</code><code class="bash comments">#ps：如果你wget不下来,文件末尾我会给出相关文件的,自行下载并上传到自己的服务器进行解压,然后进行一系列的安装即可。</code></div></div></td></tr></tbody></table><p><br></p><p>以上步骤完成之后在php.ini中增加如下配置：</p><table border="0" cellpadding="0" cellspacing="0" class="syntaxhighlighter  bash"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="bash plain">[xhprof]</code></div><div class="line number2 index1 alt1"><code class="bash plain">extension=</code><code class="bash plain">/usr/lib64/php/modules/xhprof</code><code class="bash plain">.so&nbsp;&nbsp;</code><code class="bash comments">#xhprof.so文件路径换成你自己的</code></div><div class="line number3 index2 alt2"><code class="bash plain">xhprof.output_dir=</code><code class="bash plain">/tmp/xhprof</code></div></div></td></tr></tbody></table><p><strong><br></strong></p><p>接着在/tmp目录创建一个xhprof文件夹，并赋予777权限，用来保存xhprof分析所得出的日志文件</p><table border="0" cellpadding="0" cellspacing="0" class="syntaxhighlighter  bash"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="bash functions">mkdir</code>&nbsp;<code class="bash plain">/tmp/xhprof/</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="bash functions">chmod</code>&nbsp;<code class="bash plain">-R&nbsp;777&nbsp;</code><code class="bash plain">/tmp/xhprof/</code>&nbsp;<code class="bash comments">#这里就直接省事给777了。。</code></div></div></td></tr></tbody></table><p><strong><br></strong></p><p><strong>注意：</strong></p><p>①、./configure 不一定需要增加--with-php-config，只有当服务器有多个版本php的时候，或者php-config没有在/usr/bin的时候才需要指定php-config文件的路径位置</p><p><br></p><p>②、xhprof的output_dir配置项需要可读可写的权限，我们在上面已经配置过了。xhprof.output_dir是xhprof的输出目录，每次执行 xhprof的save_run方法时都会生成一个 run_id.project_name.xhprof 文件。这个目录在哪里并不重要（按照本文的配置，目前该目录的位置在/tmp/xhprof/）。注意此路径的权限要可读写！否则文件无法生成成功。</p><h2>xhprof是否安装成功的验证</h2><p>如果你的phpinfo中有显示xhprof扩展信息，则说明安装成功。<br></p><p>安装成功示例截图如下：</p><p><img src="./php的性能分析工具-xhprof_files/1573382214354616.png" title="1573382214354616.png" _src="/Uploads/image/20191110/1573382214354616.png" alt="p0.png"></p><h2>简单使用</h2><h3>xhprof工具需要引入2个类库：</h3><p>还记得之前下载的源码吧？把里面的xhprof_lib目录复制一份儿，复制到你的项目目录中，并且在你需要分析的php代码中进行引入（你需要在哪里进行分析php代码性能，就在哪里的php代码中引入下面这2个文件）：</p><table border="0" cellpadding="0" cellspacing="0" class="syntaxhighlighter  php"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="php keyword">include_once</code>&nbsp;<code class="php string">'/home/wwwroot/default/xhprof/xhprof_lib/utils/xhprof_lib.php'</code><code class="php plain">;</code></div><div class="line number2 index1 alt1"><code class="php keyword">include_once</code>&nbsp;<code class="php string">'/home/wwwroot/default/xhprof/xhprof_lib/utils/xhprof_runs.php'</code><code class="php plain">;</code></div></div></td></tr></tbody></table><h2>开启性能分析：使用 xhprof_enable() 函数</h2><table border="0" cellpadding="0" cellspacing="0" class="syntaxhighlighter  php"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="php plain">xhprof_enable(XHPROF_FLAGS_CPU|XHPROF_FLAGS_MEMORY|XHPROF_FLAGS_NO_BUILTINS);</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="php comments">//XHPROF_FLAGS_NO_BUILTINS&nbsp;(integer)</code></div><div class="line number4 index3 alt1"><code class="php comments">//使得跳过所有内置（内部）函数</code></div><div class="line number5 index4 alt2">&nbsp;</div><div class="line number6 index5 alt1"><code class="php comments">//XHPROF_FLAGS_CPU&nbsp;(integer)</code></div><div class="line number7 index6 alt2"><code class="php comments">//使输出的性能数据中添加&nbsp;CPU&nbsp;数据</code></div><div class="line number8 index7 alt1">&nbsp;</div><div class="line number9 index8 alt2"><code class="php comments">//XHPROF_FLAGS_MEMORY&nbsp;(integer)</code></div><div class="line number10 index9 alt1"><code class="php comments">//使输出的性能数据中添加内存数据</code></div><div class="line number11 index10 alt2">&nbsp;</div><div class="line number12 index11 alt1">&nbsp;</div><div class="line number13 index12 alt2"><code class="php comments">//当然了,这些预定义常量是可选的,不写也可以,直接在相关php代码块中调用&nbsp;xhprof_enable();&nbsp;即可</code></div></div></td></tr></tbody></table><h2>关闭性能分析：使用 xhprof_disable() 函数，并将分析的结果保存起来</h2><table border="0" cellpadding="0" cellspacing="0" class="syntaxhighlighter  php"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="php variable">$data</code>&nbsp;<code class="php plain">=&nbsp;xhprof_disable();&nbsp;</code><code class="php comments">//关闭性能分析</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="php variable">$obj_xhprof_run</code>&nbsp;<code class="php plain">=&nbsp;</code><code class="php keyword">new</code>&nbsp;<code class="php plain">XHProfRuns_Default();</code></div><div class="line number4 index3 alt1"><code class="php variable">$run_id</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code class="php plain">=&nbsp;</code><code class="php variable">$obj_xhprof_run</code><code class="php plain">-&gt;save_run(</code><code class="php variable">$data</code><code class="php plain">,&nbsp;</code><code class="php string">"test"</code><code class="php plain">);&nbsp;</code><code class="php comments">//把性能分析的报告保存到output_dir目录</code></div><div class="line number5 index4 alt2">&nbsp;</div><div class="line number6 index5 alt1"><code class="php plain">var_dump(</code><code class="php variable">$run_id</code><code class="php plain">);&nbsp;</code><code class="php comments">//$run_id是本次报告的一个报告id,用来标识本次报告的唯一性,相当于数据表中的主键id,下面查看性能的时候会用到这个$run_id</code></div></div></td></tr></tbody></table><h2>xhprof工具的完整使用示例代码如下：<br></h2><table border="0" cellpadding="0" cellspacing="0" class="syntaxhighlighter  php"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div class="line number29 index28 alt2">29</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="php plain">&lt;?php</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="php keyword">include_once</code>&nbsp;<code class="php string">'/home/wwwroot/default/xhprof/xhprof_lib/utils/xhprof_lib.php'</code><code class="php plain">;</code></div><div class="line number4 index3 alt1"><code class="php keyword">include_once</code>&nbsp;<code class="php string">'/home/wwwroot/default/xhprof/xhprof_lib/utils/xhprof_runs.php'</code><code class="php plain">;</code></div><div class="line number5 index4 alt2">&nbsp;</div><div class="line number6 index5 alt1"><code class="php plain">xhprof_enable();&nbsp;&nbsp;</code><code class="php comments">//开启性能分析检测</code></div><div class="line number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code class="php keyword">include_once</code>&nbsp;<code class="php string">'./mysql.php'</code><code class="php plain">;</code></div><div class="line number9 index8 alt2">&nbsp;</div><div class="line number10 index9 alt1"><code class="php variable">$sql</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code class="php plain">=&nbsp;</code><code class="php string">"SELECT&nbsp;*&nbsp;FROM&nbsp;employee"</code><code class="php plain">;</code></div><div class="line number11 index10 alt2"><code class="php variable">$sql_one</code>&nbsp;<code class="php plain">=&nbsp;</code><code class="php string">"SELECT&nbsp;*&nbsp;FROM&nbsp;employee&nbsp;WHERE&nbsp;id&nbsp;=&nbsp;3"</code><code class="php plain">;</code></div><div class="line number12 index11 alt1">&nbsp;</div><div class="line number13 index12 alt2"><code class="php variable">$result</code>&nbsp;<code class="php plain">=&nbsp;Mysql::getAll(</code><code class="php variable">$sql</code><code class="php plain">);</code></div><div class="line number14 index13 alt1"><code class="php variable">$row</code>&nbsp;&nbsp;&nbsp;&nbsp;<code class="php plain">=&nbsp;Mysql::getRow(</code><code class="php variable">$sql_one</code><code class="php plain">);</code></div><div class="line number15 index14 alt2">&nbsp;</div><div class="line number16 index15 alt1"><code class="php comments">//echo&nbsp;"&lt;pre&gt;";</code></div><div class="line number17 index16 alt2">&nbsp;</div><div class="line number18 index17 alt1"><code class="php comments">//print_r($result);</code></div><div class="line number19 index18 alt2">&nbsp;</div><div class="line number20 index19 alt1"><code class="php comments">//echo&nbsp;"&lt;hr/&gt;";</code></div><div class="line number21 index20 alt2">&nbsp;</div><div class="line number22 index21 alt1"><code class="php comments">//print_r($row);</code></div><div class="line number23 index22 alt2">&nbsp;</div><div class="line number24 index23 alt1"><code class="php variable">$data</code>&nbsp;<code class="php plain">=&nbsp;xhprof_disable();&nbsp;</code><code class="php comments">//关闭性能分析</code></div><div class="line number25 index24 alt2">&nbsp;</div><div class="line number26 index25 alt1"><code class="php variable">$obj_xhprof_run</code>&nbsp;<code class="php plain">=&nbsp;</code><code class="php keyword">new</code>&nbsp;<code class="php plain">XHProfRuns_Default();</code></div><div class="line number27 index26 alt2"><code class="php variable">$run_id</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code class="php plain">=&nbsp;</code><code class="php variable">$obj_xhprof_run</code><code class="php plain">-&gt;save_run(</code><code class="php variable">$data</code><code class="php plain">,&nbsp;</code><code class="php string">"test"</code><code class="php plain">);&nbsp;</code><code class="php comments">//保存性能分析报告</code></div><div class="line number28 index27 alt1">&nbsp;</div><div class="line number29 index28 alt2"><code class="php plain">var_dump(</code><code class="php variable">$run_id</code><code class="php plain">);&nbsp;</code><code class="php comments">//输出本次性能分析的报告id</code></div></div></td></tr></tbody></table><p>然后访问一下该文件，就会记录该文件的php代码的性能分析报告。<br></p><h2>查看性能分析：</h2><p>还记得之前下载的源码吧？把里面的 xhprof_html 目录复制出来，单独做成一个目录，并通过nginx或apache配置成一个可访问的站点目录：</p><p>示例截图如下：<br></p><p><img src="./php的性能分析工具-xhprof_files/1573384809514568.png" title="1573384809514568.png" _src="/Uploads/image/20191110/1573384809514568.png" alt="p3.png"></p><p></p><p><br></p><p>并且把之前的 xhprof_lib 复制一份到同级目录（也就是说 <span style="white-space: normal;">xhprof_lib 和&nbsp;<span style="white-space: normal;">xhprof_html 这两个文件夹是在同一个目录下，也就是同级的关系</span></span>），目录示例截图如下：</p><p><img src="./php的性能分析工具-xhprof_files/1573384963714164.png" title="1573384963714164.png" _src="/Uploads/image/20191110/1573384963714164.png" alt="p4.png"></p><p><br></p><p><strong>接下来，我们访问这个站点：</strong></p><p><img src="./php的性能分析工具-xhprof_files/1573386124125185.png" title="1573386124125185.png" _src="/Uploads/image/20191110/1573386124125185.png" alt="p5.png"></p><p>上图中可以看到，会显示出所有的你已经分析完毕，并保存的分析报告文件，其中xxxxxxx.test.xhprof就是我们上面所说的$run_id（也就是 报告id）。</p><p><br></p><p><strong>点击其中一个进行查看：</strong></p><p><img src="./php的性能分析工具-xhprof_files/1573386985496333.png" title="1573386985496333.png" _src="/Uploads/image/20191110/1573386985496333.png" alt="p3.png"></p><p>如上图所示，这样就可以查看到所有代码执行的cpu消耗，执行时间，占用情况了,根据这份数据，去优化最耗时间的代码就可以了。其中Calls、Incl. Wall Time(microsec)、Excl. Wall Time(microsec)这三个单词，点击 可以将下面显示的结果进行降序排序。</p><p></p><p><strong><span style="white-space: nowrap;"><br></span></strong></p><p><strong><span style="white-space: nowrap;">根据上图显示的结果，这里列举一些常用的名词的解释：</span></strong></p><p><span style="white-space: nowrap;">Function Name：方法名称。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Calls：方法被调用的次数。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Calls%：方法调用次数在同级方法总数调用次数中所占的百分比。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Incl.Wall Time(microsec)：方法执行花费的时间，包括子方法的执行时间。（单位：微秒）</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">IWall%：方法执行花费的时间百分比。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Excl. Wall Time(microsec)：方法本身执行花费的时间，不包括子方法的执行时间。（单位：微秒）</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">EWall%：方法本身执行花费的时间百分比。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Incl. CPU(microsecs)：方法执行花费的CPU时间，包括子方法的执行时间。（单位：微秒）</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">ICpu%：方法执行花费的CPU时间百分比。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Excl. CPU(microsec)：方法本身执行花费的CPU时间，不包括子方法的执行时间。（单位：微秒）</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">ECPU%：方法本身执行花费的CPU时间百分比。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Incl.MemUse(bytes)：方法执行占用的内存，包括子方法执行占用的内存。（单位：字节）</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">IMemUse%：方法执行占用的内存百分比。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Excl.MemUse(bytes)：方法本身执行占用的内存，不包括子方法执行占用的内存。（单位：字节）</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">EMemUse%：方法本身执行占用的内存百分比。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Incl.PeakMemUse(bytes)：Incl.MemUse峰值。（单位：字节）</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">IPeakMemUse%：Incl.MemUse峰值百分比。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">Excl.PeakMemUse(bytes)：Excl.MemUse峰值。单位：（字节）</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">EPeakMemUse%：Excl.MemUse峰值百分比。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><strong><span style="white-space: nowrap;">也可以查看请求执行的流程图：</span></strong></p><p>上面那个图中，有一个&nbsp;[View Full Callgraph] 点击这里，可以查看该分析报告的请求执行流程图，如果点击之后报如下错误：</p><table border="0" cellpadding="0" cellspacing="0" class="syntaxhighlighter  plain"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">failed&nbsp;to&nbsp;execute&nbsp;cmd:&nbsp;"&nbsp;dot&nbsp;-Tpng".&nbsp;stderr:&nbsp;`sh:&nbsp;dot:&nbsp;command&nbsp;not&nbsp;found&nbsp;'</code></div></div></td></tr></tbody></table><p><img src="./php的性能分析工具-xhprof_files/1573387730824834.png" title="1573387730824834.png" _src="/Uploads/image/20191110/1573387730824834.png" alt="p1.png"><span style="white-space: nowrap;"></span><br></p><p>说明服务器没有安装画图软件 graphviz，centos系统直接使用：yum -y install graphviz&nbsp; 一键安装即可。</p><p><br></p><p>点击 [View Full Callgraph] 之后的示例截图如下：</p><p><img src="./php的性能分析工具-xhprof_files/1573387926462815.png" title="1573387926462815.png" _src="/Uploads/image/20191110/1573387926462815.png" alt="p2.png"></p><p>如上图所示，xhprof会通过 黄色，红色，以及一根比较粗的灰色的线，为我们标识出主要的耗时路线。调用红色是耗时最大的函数调用，通过分析这个图片我们可以看出哪里耗时长，从而有针对性的去做优化。</p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;"><span style="white-space: normal;">本文所使用的相关文件：</span><img src="./php的性能分析工具-xhprof_files/icon_rar.gif" _src="/static/admin/ueditor1.4.3/dialogs/attachment/fileTypeImages/icon_rar.gif"><a href="https://www.css3er.com/ueditor/php/upload/file/20191110/1573388381897331.zip" title="相关文件.zip" style="white-space: normal; font-size: 12px; color: rgb(0, 102, 204);">相关文件.zip</a></span></p><p><span style="white-space: nowrap;">如果你要使用本文的相关文件，请下载解压之后，自行调整适合你自己的对应的文件路径。</span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;">本文介绍的只是xhprof工具在linux上如何使用，xhprof在windows上如何使用可参考以下链接：</span></p><p><span style="white-space: nowrap;"><a href="https://www.cnblogs.com/qq917937712/p/8889001.html" target="_blank" title="https://www.cnblogs.com/qq917937712/p/8889001.html">https://www.cnblogs.com/qq917937712/p/8889001.html</a><br></span></p><p><span style="white-space: nowrap;"><a href="https://www.cnblogs.com/buexplain/p/4821619.html" target="_blank" title="https://www.cnblogs.com/buexplain/p/4821619.html">https://www.cnblogs.com/buexplain/p/4821619.html</a></span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;"><br></span></p><p style="text-align: center;"><span style="white-space: nowrap; color: rgb(255, 0, 0);">今天进步一点点，明天梦想近点点！<img src="./php的性能分析工具-xhprof_files/j_0003.gif" _src="http://img.baidu.com/hi/jx2/j_0003.gif"></span></p><p><span style="white-space: nowrap;"><br></span></p><p><span style="white-space: nowrap;"><br></span></p>					<p>
+						<strong>
+							<span style="color: #ff0000;">声明：禁止任何非法用途使用，凡因违规使用而引起的任何法律纠纷，本站概不负责。</span>
+						</strong>
+					</p>
+					</div>
+				<!--- //Article-content -->
+
+				<!--  css & js -->
+				<!--<link rel="stylesheet" href="dist/css/share.min.css">
+				<script src="dist/js/social-share.min.js"></script>-->
+
+				
+				<!--share-->
+				<link href="./php的性能分析工具-xhprof_files/share.min.css" type="text/css" rel="stylesheet">
+				<script src="./php的性能分析工具-xhprof_files/jquery.share.min.js.下载" type="text/javascript"></script>
+
+				<div class="share-component social-share" data-sites="qq,weibo,wechat,qzone,douban"><a class="social-share-icon icon-qq" href="http://connect.qq.com/widget/shareqq/index.html?url=https%3A%2F%2Fwww.css3er.com%2Fp%2F232.html&amp;title=php%E7%9A%84%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9Axhprof%20-%20%E5%B0%8F%E5%91%A8%E5%8D%9A%E5%AE%A2%2C%E5%B0%8F%E5%91%A8%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%2C%E7%A8%8B%E5%BA%8F%E7%8C%BF%E5%B0%8F%E7%8E%8B%E5%AD%90%2C%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%2C%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%A8%A1%E6%9D%BF%2Cphp%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F%2C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%2Cwzyl%20-%20%E9%BB%91%E5%A4%9C%E9%81%AE%E4%B8%8D%E4%BD%8F%E5%85%89%E4%BA%AE&amp;source=php%E7%9A%84%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9Axhprof%20-%20%E5%B0%8F%E5%91%A8%E5%8D%9A%E5%AE%A2%2C%E5%B0%8F%E5%91%A8%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%2C%E7%A8%8B%E5%BA%8F%E7%8C%BF%E5%B0%8F%E7%8E%8B%E5%AD%90%2C%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%2C%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%A8%A1%E6%9D%BF%2Cphp%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F%2C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%2Cwzyl%20-%20%E9%BB%91%E5%A4%9C%E9%81%AE%E4%B8%8D%E4%BD%8F%E5%85%89%E4%BA%AE&amp;desc=%E5%80%9F%E5%8A%A9xhprof%E5%B7%A5%E5%85%B7%E6%9D%A5%E5%88%86%E6%9E%90%E6%88%91%E4%BB%AC%E7%9A%84php%E4%BB%A3%E7%A0%81%E7%9A%84%E6%80%A7%E8%83%BD&amp;pics=https%3A%2F%2Fwww.css3er.com%2Fstatic%2Findex%2Fimages%2Flogo.png" target="_blank"></a><a class="social-share-icon icon-weibo" href="https://service.weibo.com/share/share.php?url=https%3A%2F%2Fwww.css3er.com%2Fp%2F232.html&amp;title=php%E7%9A%84%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9Axhprof%20-%20%E5%B0%8F%E5%91%A8%E5%8D%9A%E5%AE%A2%2C%E5%B0%8F%E5%91%A8%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%2C%E7%A8%8B%E5%BA%8F%E7%8C%BF%E5%B0%8F%E7%8E%8B%E5%AD%90%2C%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%2C%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%A8%A1%E6%9D%BF%2Cphp%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F%2C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%2Cwzyl%20-%20%E9%BB%91%E5%A4%9C%E9%81%AE%E4%B8%8D%E4%BD%8F%E5%85%89%E4%BA%AE&amp;pic=https%3A%2F%2Fwww.css3er.com%2Fstatic%2Findex%2Fimages%2Flogo.png&amp;appkey=" target="_blank"></a><a class="social-share-icon icon-wechat" href="javascript:;" tabindex="-1"><div class="wechat-qrcode"><h4>微信扫一扫：分享</h4><div class="qrcode"><img src="data:image/png;base64,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"></div><div class="help"><p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p></div></div></a><a class="social-share-icon icon-qzone" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https%3A%2F%2Fwww.css3er.com%2Fp%2F232.html&amp;title=php%E7%9A%84%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9Axhprof%20-%20%E5%B0%8F%E5%91%A8%E5%8D%9A%E5%AE%A2%2C%E5%B0%8F%E5%91%A8%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%2C%E7%A8%8B%E5%BA%8F%E7%8C%BF%E5%B0%8F%E7%8E%8B%E5%AD%90%2C%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%2C%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%A8%A1%E6%9D%BF%2Cphp%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F%2C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%2Cwzyl%20-%20%E9%BB%91%E5%A4%9C%E9%81%AE%E4%B8%8D%E4%BD%8F%E5%85%89%E4%BA%AE&amp;desc=%E5%80%9F%E5%8A%A9xhprof%E5%B7%A5%E5%85%B7%E6%9D%A5%E5%88%86%E6%9E%90%E6%88%91%E4%BB%AC%E7%9A%84php%E4%BB%A3%E7%A0%81%E7%9A%84%E6%80%A7%E8%83%BD&amp;summary=%E5%80%9F%E5%8A%A9xhprof%E5%B7%A5%E5%85%B7%E6%9D%A5%E5%88%86%E6%9E%90%E6%88%91%E4%BB%AC%E7%9A%84php%E4%BB%A3%E7%A0%81%E7%9A%84%E6%80%A7%E8%83%BD&amp;site=php%E7%9A%84%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9Axhprof%20-%20%E5%B0%8F%E5%91%A8%E5%8D%9A%E5%AE%A2%2C%E5%B0%8F%E5%91%A8%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%2C%E7%A8%8B%E5%BA%8F%E7%8C%BF%E5%B0%8F%E7%8E%8B%E5%AD%90%2C%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%2C%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%A8%A1%E6%9D%BF%2Cphp%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F%2C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%2Cwzyl%20-%20%E9%BB%91%E5%A4%9C%E9%81%AE%E4%B8%8D%E4%BD%8F%E5%85%89%E4%BA%AE&amp;pics=https%3A%2F%2Fwww.css3er.com%2Fstatic%2Findex%2Fimages%2Flogo.png" target="_blank"></a><a class="social-share-icon icon-douban" href="http://shuo.douban.com/!service/share?href=https%3A%2F%2Fwww.css3er.com%2Fp%2F232.html&amp;name=php%E7%9A%84%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9Axhprof%20-%20%E5%B0%8F%E5%91%A8%E5%8D%9A%E5%AE%A2%2C%E5%B0%8F%E5%91%A8%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%2C%E7%A8%8B%E5%BA%8F%E7%8C%BF%E5%B0%8F%E7%8E%8B%E5%AD%90%2C%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%2C%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%A8%A1%E6%9D%BF%2Cphp%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F%2C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%2Cwzyl%20-%20%E9%BB%91%E5%A4%9C%E9%81%AE%E4%B8%8D%E4%BD%8F%E5%85%89%E4%BA%AE&amp;text=%E5%80%9F%E5%8A%A9xhprof%E5%B7%A5%E5%85%B7%E6%9D%A5%E5%88%86%E6%9E%90%E6%88%91%E4%BB%AC%E7%9A%84php%E4%BB%A3%E7%A0%81%E7%9A%84%E6%80%A7%E8%83%BD&amp;image=https%3A%2F%2Fwww.css3er.com%2Fstatic%2Findex%2Fimages%2Flogo.png&amp;starid=0&amp;aid=0&amp;style=11" target="_blank"></a></div>
+
+
+					<div class="award_box">
+						<div class="award_payimg">
+							<img src="./php的性能分析工具-xhprof_files/alipay.png" alt="小周博客">
+						</div>
+						<div class="pay_explain">扫码打赏，你说多少就多少</div>
+						<div class="award_payselect">
+							<div class="pay_item checked" data-id="alipay">
+								<span class="radiobox"></span>
+								<span class="pay_logo"><img src="./php的性能分析工具-xhprof_files/alipay.jpg" alt="小周博客"></span>
+							</div>
+							<div class="pay_item" data-id="wxpay">
+								<span class="radiobox"></span>
+								<span class="pay_logo"><img src="./php的性能分析工具-xhprof_files/wechat.jpg" alt="小周博客"></span>
+							</div>
+						</div>
+						<div class="award_info">
+							<p>打开<span id="award_pay_txt">支付宝</span>扫一扫，即可进行扫码打赏哦</p>
+						</div>
+					</div>
+
+										<div class="comments">
+						<h3>精彩评论</h3>
+							<div id="comments">
+								<span style="font-weight:bold;font-size:14px;margin-right:30px;">全部回复</span>
+								<span style="color: #f60;font-size:18px;font-weight: bold;">0</span>人评论
+								<span style="color: #f60;font-size:18px;margin-left:30px;font-weight: bold;">7,777</span>人参与
+							</div>
+	<!-- 评论列表-->
+	<div id="comment-lists">
+		<ol class="commentlist">
+
+			
+			<!--下面这个 有评论回复的样式暂时屏蔽start-->
+			<!--<li class="comment even thread-even depth-1" id="comment-404">
+				<div id="div-comment-404" class="comment-body">
+					<div class="gravatar">
+						<div class="comment-author vcard">
+							<img alt='' src='/static/index/images/1374d7a21741487aa357740a7c904063.gif' class='avatar avatar-50 photo' height='50' width='50' />
+						</div>
+					</div>
+					<div class="floor">2楼</div>
+					<div class="commenttext">
+						<span class="commentid">
+							<span class="comment_author">naive</span>
+							<a data-hint="潜水" class="hint hint&#45;&#45;top"><i class="fa fa-star yellow"></i></a>
+						</span>
+						<div class="comment_text">
+							<p>浏览器换了无数个都看不到密码</p>
+						</div>
+						<div class="comment-info">
+							<span class="datetime">
+								<i class="fa fa-clock-o"></i>2017-02-23 04:06:13
+							</span>
+							<span class="reply">
+								<i class="fa fa-reply"></i>
+								<a rel='nofollow' class='comment-reply-link' href='' onclick='return addComment.moveForm( "div-comment-404", "404", "respond", "40" )' aria-label='回复给naive'>回复</a>
+							</span>
+							<span class="edit_comment"></span>
+						</div>
+					</div>
+				</div>
+				<ul class="children">
+					<li class="comment byuser comment-author-admin bypostauthor odd alt depth-2" id="comment-405">
+						<div id="div-comment-405" class="comment-body">
+							<div class="gravatar">
+								<div class="comment-author vcard">
+									<img alt='' src='/static/index/images/a6c180fa58e24e129dcbdfdfbe2add9f.gif' srcset='http://2.gravatar.com/avatar/b9cd8d7be31a51a09c61b2aca4786b06?s=100&amp;d=monsterid&amp;r=g 2x' class='avatar avatar-50 photo' height='50' width='50' />
+								</div>
+							</div>
+							<div class="floor"></div>
+							<div class="commenttext">
+								<span class="commentid">
+									<span class="comment_author">
+										<a href=''  target='_blank' class='url'>King</a>
+									</span>
+									<a class="vp" title="本文作者">作者</a>
+								</span>
+								<div class="comment_text">
+									<p>
+										<a href="#comment-404" style="color: #FF6600;">@naive</a> 现在已被屏蔽。我再放上去，我的网站就被屏蔽咯
+									</p>
+								</div>
+								<div class="comment-info">
+									<span class="datetime">
+										<i class="fa fa-clock-o"></i>2017-02-24 01:46:37
+									</span>
+									<span class="reply">
+										<i class="fa fa-reply"></i>
+										<a rel='nofollow' class='comment-reply-link' href='#' onclick='return addComment.moveForm( "div-comment-405", "405", "respond", "40" )' aria-label='回复给King'>回复</a>
+									</span>
+									<span class="edit_comment"></span>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>&lt;!&ndash; .children &ndash;&gt;
+			</li>-->
+			<!--下面这个 有评论回复的样式暂时屏蔽end-->
+
+		</ol>
+		<div class="navigation">
+			<div id="comments-navi"></div>
+		</div>
+
+    </div>
+
+	<!-- 评论列表-->
+	<div id="respond">
+		<p>
+    		</p><div id="respond" class="comment-respond">
+    			<h3 id="reply-title" class="comment-reply-title">
+					<small>
+						<a rel="nofollow" id="cancel-comment-reply-link" href="https://www.css3er.com/p/232.html" style="display:none;">【取消回复】</a>
+					</small>
+				</h3>
+	<form action="https://www.css3er.com/p/232.html" method="" id="commentform" class="comment-form">
+
+		<!--<p class="comment-notes">
+			<span id="email-notes">电子邮件地址不会被公开。</span> 必填项已用
+			<span class="required">*</span>标注
+		</p>-->
+		<p class="col-md-12 comments-form">
+			<textarea id="comment" name="comment" tabindex="4" cols="40" rows="3" aria-required="true"></textarea>
+		</p>
+
+		<!--评论作者相关信息-->
+		<!--<label for="comment_mail_notify" style="display:block">
+			<input type="checkbox" name="comment_mail_notify" id="comment_mail_notify" value="comment_mail_notify" checked="checked"/>有人回复时邮件通知我
+		</label>
+
+		<div id="comment-author-info">
+			<p class="comment-form-author col-md-4">
+				<input name="author" type="text" placeholder="昵称：*" value="" size="30"/>
+			</p>
+
+			<p class="comment-form-email col-md-4">
+				<input name="email" type="text" placeholder="邮箱：*"value="" size="30"/>
+			</p>
+
+			<p class="comment-form-url col-md-4">
+				<input name="url" type="text" placeholder="网址" value=""size="30"/>
+			</p>
+		</div>-->
+	<p class="form-submit">
+		<input name="submit" type="button" id="submit" class="submit_comment" value="发表一下 我的看法" style="background-color:cyan; color:black;">
+		<input type="hidden" name="comment_post_id" value="" id="comment_post_id">
+		<input type="hidden" name="comment_parent" id="comment_parent" value="">
+		<input type="hidden" name="user_id" id="user_id" value="">
+	</p>
+
+	<p class="antispam-group antispam-group-q" style="clear: both;">
+	<!--<label>Current ye@r <span class="required">*</span></label>-->
+	<input type="hidden" name="antspm-a" class="antispam-control antispam-control-a" value="2017">
+	<!--<input type="text" name="antspm-q" class="antispam-control antispam-control-q" value="4.3" autocomplete="off" />
+    -->
+	</p>
+
+	<p class="antispam-group antispam-group-e" style="display: none;">
+	<label>Leave this field empty</label>
+	<input type="text" name="antspm-e-email-url-website" class="antispam-control antispam-control-e" value="" autocomplete="off">
+	</p>
+	</form>
+	</div>
+
+		<!-- #respond -->
+
+		<div id="loading-img">
+
+			<img src="./php的性能分析工具-xhprof_files/loading_com.gif" alt="loading">
+
+		</div>
+
+		<div id="error-comments"></div>
+
+
+		<script type="text/javascript">
+
+
+		//快捷回复 Ctrl+Enter
+		//<![CDATA[
+		/*jQuery(document).keypress(function(e){
+			if(e.ctrlKey && e.which == 13 || e.which == 10) {
+			jQuery(".submit").click();
+			document.body.focus();
+			} else if (e.shiftKey && e.which==13 || e.which == 10) {
+				jQuery(".submit").click();
+				}
+			})
+		// ]]>
+		//<![CDATA[
+
+		var changeMsg = "[ 编辑信息 ]";
+		var closeMsg = "[ 隐藏信息 ]";
+		function toggleCommentAuthorInfo() {
+		jQuery('#comment-author-info').slideToggle('slow', function(){
+		if ( jQuery('#comment-author-info').css('display') == 'none' ) {
+		jQuery('#toggle-comment-author-info').text(changeMsg);
+		} else {
+		jQuery('#toggle-comment-author-info').text(closeMsg);
+		}
+		});
+		}*/
+		//]]>
+		</script>
+		</div>
+
+		</div>
+</section>
+<!-- //Blog-Box -->
+</div>
+
+<!--<script type='text/javascript' src='/static/index/js/blog.js'></script>-->
+
+<!-- Widget-Box -->
+<div class="col-md-3 widget" style="margin-top:20px;">
+	<div class="widget-box">
+		<div class="widget-title">
+			<h3>关注我
+				<span class="sub-title orange">Follow Me</span>
+			</h3>
+		</div>
+		<div class="widget-item">
+			<ul class="followme center">
+				<li class="orange-bg jtooltip">
+					<a href="https://weibo.com/zylgxn" class="follow-icon">
+						<i class="fa fa-weibo"></i>
+					</a>
+				</li>
+				<li class="blue-bg jtooltip">
+					<a href="http://wpa.qq.com/msgrd?v=3&amp;uin=761319237&amp;site=qq&amp;menu=yes" class="follow-icon">
+						<i class="fa fa-qq"></i>
+					</a>
+				</li>
+				<li class="green-bg" id="wechat" qrcode=" &lt;img src=&#39;/static/index/images/wx.png&#39; /&gt;">
+					<a href="https://www.css3er.com/p/232.html#" class="follow-icon">
+						<i class="fa fa-weixin"></i>
+					</a>
+				</li>
+				<li class="red-bg jtooltip">
+					<a href="https://jq.qq.com/?_wv=1027&amp;k=57IVGm5" class="follow-icon">
+						<i class="fa fa-rss"></i>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="widget-box">
+		<div class="widget-title">
+			<h3>最新文章
+				<span class="sub-title orange">New Articles</span>
+			</h3>
+		</div>
+		<div class="widget-item">
+			<div class="widget-post">
+				<a href="javascript:void(0);" target="_blank" rel="bookmark" title="给iPhone的信息添加多彩炫酷的动画效果">
+					<img width="300" height="225" src="./php的性能分析工具-xhprof_files/945118c29cb261fc5453-300x225.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="">
+					<span>给iPhone的信息添加多彩炫酷的动画效果</span>
+				</a>
+				<span class="btn-cat">
+					<a href="javascript:void(0);" title="苹果体验馆" "="">苹果体验馆</a>
+				</span>
+			</div>
+			<div class="widget-post">
+				<a href="javascript:void(0);" target="_blank" rel="bookmark" title="苹果产品为什么选择锂离子电池？">
+					<img width="300" height="225" src="./php的性能分析工具-xhprof_files/945118c29cb261fc5453-300x225.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" srcset="">
+					<span>苹果产品为什么选择锂离子电池？</span>
+				</a>
+				<span class="btn-cat">
+					<a href="javascript:void(0);" title="苹果体验馆" "="">苹果体验馆</a>
+				</span>
+			</div>
+			<div class="widget-post">
+				<a href="javascript:void(0);" target="_blank" rel="bookmark" title="arduino入门教程基础-模拟读取串口">
+					<img width="300" height="225" src="./php的性能分析工具-xhprof_files/75f5750f6dd6afbec57b-300x225.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="">
+					<span>arduino入门教程基础-模拟读取串口</span>
+				</a>
+				<span class="btn-cat">
+					<a href="javascript:void(0);" title="arduino" "="">arduino</a>
+				</span>
+			</div>
+			<div class="widget-post">
+				<a href="javascript:void(0);" target="_blank" rel="bookmark" title="苹果官方 iPhone、iPad 和 iPod touch 电池保养小提示">
+					<img width="300" height="225" src="./php的性能分析工具-xhprof_files/25b2916b5c49db617f52-300x225.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" srcset="">
+					<span>苹果官方 iPhone、iPad 和 iPod touch 电池保养小提示</span>
+				</a>
+				<span class="btn-cat">
+					<a href="javascript:void(0);" title="苹果体验馆" "="">苹果体验馆</a>
+				</span>
+			</div>
+			<div class="widget-post">
+				<a href="javascript:void(0);" target="_blank" rel="bookmark" title="苹果官方延长电池使用时间和寿命方法">
+					<img width="300" height="225" src="./php的性能分析工具-xhprof_files/25b2916b5c49db617f52-300x225.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" srcset="">
+					<span>苹果官方延长电池使用时间和寿命方法</span>
+				</a>
+				<span class="btn-cat">
+					<a href="javascript:void(0);" title="苹果体验馆" "="">苹果体验馆</a>
+				</span>
+			</div>
+			
+		</div>
+	</div>
+</div>
+<!-- //Widget-Box -->
+</div>
+</div>
+
+<!--引入尾部-->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 foot-item">
+                <h3 class="foot-title"> 关于我们 </h3>
+                <p>小周博客-后端开发 技术交流群：475061997 最有价值的开发技术交流群！！！</p>
+            </div>
+            <div class="col-md-4 foot-item">
+                <h3 class="foot-title"> 站点信息 </h3>
+                <ul id="menu-%e5%ba%95%e9%83%a8%e5%af%bc%e8%88%aa" class="sitelink">
+                    <li id="menu-item-38" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-38">
+                        <a href="javascript:void(0);">留言板</a>
+                    </li>
+                    <li id="menu-item-39" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-39">
+                        <a href="javascript:void(0);">关于我们</a>
+                    </li>
+                    <li id="menu-item-50" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-50">
+                        <a href="javascript:void(0);">免费xxx</a>
+                    </li>
+                    <li id="menu-item-56" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-56">
+                        <a href="javascript:void(0);">网盘外链</a>
+                    </li>
+                    <li id="menu-item-96" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-96">
+                        <a rel="nofollow" href="http://wpa.qq.com/msgrd?v=3&amp;uin=761319237&amp;site=qq&amp;menu=yes" target="_blank">友情链接</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4 foot-item">
+                <h3 class="foot-title"> 微信关注 </h3>
+                <p><img src="./php的性能分析工具-xhprof_files/wx.png" alt="小周博客" class="qrcode"></p>
+            </div>
+        </div>
+    </div>
+    <div class="copyright text-center"> 申明：本站文字除标明出处外皆为作者原创，转载请注明原文链接。 <br>
+        Copyright © 2016-2017 小周博客 版权所有<br>
+        <a rel="nofollow" href="https://beian.miit.gov.cn/" target="_blank">鲁ICP备19032029号-1</a>
+        <a rel="nofollow" target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=37020302371752" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+            <img src="./php的性能分析工具-xhprof_files/police_put_on_records.png" alt="小周博客" style="float:left; margin:3px 0 0 10px">
+            <p style="float:left;height:20px;line-height:20px;margin: 3px 0px 0px 5px;">鲁公网安备 37020302371752号</p>
+        </a>
+    </div>
+
+
+    <div style="display: none">
+
+    </div>
+
+</footer>
+
+<!-- Back-To-Top -->
+<div class="top" style="display: block;"> <a href="javascript:void(0);" id="back-to-top"><i class="fa fa-arrow-up fa-3x"></i></a> </div>
+<!-- //Back-To-Top -->
+<script type="text/javascript" src="./php的性能分析工具-xhprof_files/highlight-9.1.0.js.下载"></script>
+<script type="text/javascript" src="./php的性能分析工具-xhprof_files/jbox.min.js.下载"></script>
+<script type="text/javascript" src="./php的性能分析工具-xhprof_files/function.js.下载"></script>
+<script src="./php的性能分析工具-xhprof_files/layer.js.下载"></script>
+
+<script>
+
+    //auto push the website to 360
+    (function(){
+        var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?fba1d9628f37ffac8d10662371118924":"https://jspassport.ssl.qhimg.com/11.0.1.js?fba1d9628f37ffac8d10662371118924";
+        document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+
+
+    //auto push the website to baidu
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+
+</script><script src="./php的性能分析工具-xhprof_files/11.0.1.js.下载" id="sozz"></script><script charset="utf-8" src="./php的性能分析工具-xhprof_files/ab77b6ea7f3fbf79.js.下载"></script>
+
+
+
+
+<script>
+
+    //search blog
+    function search_blog()
+    {
+        var data = $("#search_id").val();
+
+        if(!data)
+        {
+            //未输入搜索内容
+
+            window.location.reload(true);  //刷新当前页面
+
+            return;
+        }
+
+        //window.location.href="/index.search/index.html"+'/s/'+$.trim(data);
+
+        window.location.href="/s/" + $.trim(data) + '.html';
+    }
+
+    //给搜索框绑定回车事件
+    $("#search_id").bind('keyup', function (event){
+
+        var keyboardCode = event.keyCode; //获取按键的键码（键盘码  回车键的键码是 13）
+
+        if(keyboardCode == 13)
+        {
+            //按下回车后  进行搜索
+            search_blog();
+        }
+    })
+
+
+    /**
+     * @desc     弹窗提示
+     * @author   wzyl
+     * @datetime 2020-10-06 17:28
+     *
+     */
+    function show_prompt()
+    {
+        layer.alert('开发中...尽请期待o(￣┰￣*)ゞ', {title:'啊...这...', icon:6});
+    }
+
+</script>
+
+
+<script type="text/javascript" src="./php的性能分析工具-xhprof_files/jquery.barrager.min.js.下载"></script>
+<script type="text/javascript">
+
+	$('#award').jBox('Modal', {
+		title: '感谢您的支持，我会继续努力的!',
+		content: $('.award_box'),
+		animation: 'pulse',
+	});
+
+	$(".pay_item").click(function(){
+
+		$(this).addClass('checked').siblings('.pay_item').removeClass('checked');
+
+		var dataid = $(this).attr('data-id');
+		$(".award_payimg img").attr("src","/static/index/images/" + dataid + ".png");
+		$("#award_pay_txt").text(dataid == "alipay" ? "支付宝" : "微信");
+	});
+
+	new jBox('Image');
+
+
+	window.addEventListener("keydown", function(e) {
+
+		//可以判断是不是mac，如果是mac,ctrl变为花键
+		//event.preventDefault() 方法阻止元素发生默认的行为。
+		if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+
+			e.preventDefault();
+		}
+
+	}, false);
+
+
+	//document.oncontextmenu = new Function("event.returnValue=false");
+	//document.onselectstart=new Function("event.returnValue=false");
+
+
+
+
+</script>
+<div id="jBoxID3" class="jBox-wrapper jBox-Tooltip jBox-Default jBox-pointerPosition-bottom" style="position: absolute; display: none; opacity: 0; z-index: 10000; padding-bottom: 12px; left: 1315.75px; top: 81.3906px;"><div class="jBox-container"><div class="jBox-content" style="width: auto; height: auto;"> <img src="./php的性能分析工具-xhprof_files/wx.png"></div></div><div class="jBox-pointer jBox-pointer-bottom" style="left: 50%; margin-left: 0px; transform: translate(-15px, 0px); height: 12px;"></div></div><div id="jBoxID4" class="jBox-wrapper jBox-Tooltip jBox-Default jBox-pointerPosition-bottom" style="position: absolute; display: none; opacity: 0; z-index: 10000; padding-bottom: 12px; left: 1303.75px; top: 264.391px;"><div class="jBox-container"><div class="jBox-content" style="width: auto; height: auto;">点击与我QQ交谈</div></div><div class="jBox-pointer jBox-pointer-bottom" style="left: 50%; margin-left: 0px; transform: translate(-15px, 0px); height: 12px;"></div></div></body></html>

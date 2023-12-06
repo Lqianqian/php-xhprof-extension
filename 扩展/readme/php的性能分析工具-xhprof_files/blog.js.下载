@@ -1,0 +1,67 @@
+/**
+ * Created by Administrator on 2021/2/13 0013.
+ */
+
+
+$(document).ready(function(){
+
+
+    /**
+     * @desc     发表评论
+     * @author   wzyl
+     * @datetime 2020-10-06 15:40
+     *
+     */
+    $(".submit_comment").click(function(){
+
+        var urlStr    = window.location.href; //获取浏览器url地址栏中完整的url
+        var urlArr    = urlStr.split("/"); //将获取到的url字符串以"/"分割成数组
+        var numRegx   = /^\d+/
+        var blogIdArr = numRegx.exec(urlArr[4]); //将urlArr[4]元素中的博文id数字以正则表达式的方式给匹配出来  返回一个array
+        var blogId    = blogIdArr[0];
+        var content   = $("#comment").val();
+        var userId    = $("#user_id").val();
+        var params    = {"user_id": userId, "content":content, "blog_id":blogId};
+
+        if(!userId)
+        {
+            layer.alert('请您先登录（。・＿・。）', {title:'提示', icon:3, closeBtn:0}, function(index){
+                //点击确定之后执行的callback
+
+                layer.close(index); //点击确定按钮后 关闭当前弹框
+                window.location.href = "/login";
+
+            });
+
+            return false;
+        }
+
+        if(!content)
+        {
+            layer.alert('请您输入评论内容(*￣︿￣)', {title:'警告', icon:2, closeBtn:0});
+
+            return false;
+        }
+
+        $.post("/index.comments/publish", params, function(obj) {
+
+            if(obj.code != "200")
+            {
+                layer.alert(obj.msg,{title:'错误', icon:5})
+
+                return;
+            }
+
+            //评论成功
+            layer.alert(obj.msg,{title:'成功', icon:6, closeBtn:0}, function(index){
+
+                //点击确定之后执行的callback
+
+                layer.close(index); //点击确定按钮后 关闭当前弹框
+                window.location.reload(true); //刷新当前页面
+            });
+
+        }, 'json')
+    });
+
+});
